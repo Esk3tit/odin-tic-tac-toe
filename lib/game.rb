@@ -3,7 +3,7 @@ require_relative 'player'
 
 class Game
   def initialize
-    @turn = 0
+    @current_player_idx = 0
     @players = [Player.new('X'), Player.new('O')]
     @grid = Grid.new
   end
@@ -32,5 +32,29 @@ class Game
     end
     
     return false
+  end
+
+  def check_for_draw
+    @grid.cells.all? { |row| row.all? { |cell| !cell.nil? } }
+  end
+
+  def play
+    # place marker for current player
+    # check win
+    # Check draw
+
+    # Alternate b/w players w/ XOR to toggle b/w indices 0 and 1
+    current_player_idx ^= 1
+  end
+
+  def get_valid_play_position(player)
+    loop do
+      row, col = player.get_play_position
+      if row.between?(0, 2) && col.between?(0, 2) && @grid.cells[row][col].nil?
+        @grid.place_player_icon(row, col, player.icon)
+      else
+        puts "Invalid position for play; please try again..."
+      end
+    end
   end
 end
