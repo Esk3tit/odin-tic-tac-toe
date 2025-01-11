@@ -12,10 +12,10 @@ class Grid
     puts "       Col"
     puts "        1   2   3"
     puts "       --- --- ---"
-    @grid.cells.each_with_index do |row, i| 
+    @cells.each_with_index do |row, i| 
       print "Row #{i+1} | "
-      puts "#{row.map { |cell| cell || ' ' }.join(' | ')}"
-      print "       --- --- ---"
+      puts "#{row.map { |cell| cell || ' ' }.join(' | ')} |"
+      puts "       --- --- ---"
     end
     puts "\n"
   end

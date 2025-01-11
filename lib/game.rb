@@ -8,7 +8,7 @@ class Game
     @grid = Grid.new
   end
 
-  def check_for_player_win(player)
+  def did_player_win?(player)
     # Check rows for win
     for row in 0...3
       if @grid.cells[row].all? { |cell| cell == player.icon }
@@ -34,24 +34,42 @@ class Game
     return false
   end
 
-  def check_for_draw
+  def did_game_draw?
     @grid.cells.all? { |row| row.all? { |cell| !cell.nil? } }
   end
 
   def play
-    # place marker for current player
-    # check win
-    # Check draw
+    # Empty board print before game loop
+    @grid.print_board
 
-    # Alternate b/w players w/ XOR to toggle b/w indices 0 and 1
-    current_player_idx ^= 1
+    loop do
+      cur_player = @players[@current_player_idx]
+      puts "Player #{cur_player.icon}'s turn!"
+      # place marker for current player
+      play_player_turn(cur_player)
+
+      @grid.print_board
+      
+      # check win & draw
+      if did_player_win?(cur_player)
+        puts "Player #{cur_player.icon} wins"
+        return
+      elsif did_game_draw?
+        puts "It's a draw..."
+        return
+      end
+
+      # Alternate b/w players w/ XOR to toggle b/w indices 0 and 1
+      @current_player_idx ^= 1
+    end
   end
 
-  def get_valid_play_position(player)
+  def play_player_turn(player)
     loop do
       row, col = player.get_play_position
       if row.between?(0, 2) && col.between?(0, 2) && @grid.cells[row][col].nil?
         @grid.place_player_icon(row, col, player.icon)
+        return
       else
         puts "Invalid position for play; please try again..."
       end
